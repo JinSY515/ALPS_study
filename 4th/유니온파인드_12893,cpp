@@ -1,0 +1,53 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int enemy[2001];
+int parent[2001];
+
+int find(int n){
+  if(n==-1) return n;
+  if(n==parent[n]) return n;
+  else return parent[n] = find(parent[n]);
+}
+
+void merge(int x, int y){
+  x=find(x);
+  int ye=find(enemy[y]);
+  if(ye==-1){
+    enemy[y]=x;
+    ye=x;
+  }
+  parent[x]=ye;
+}
+
+void Init(int n){
+  for(int i=1; i<=n; i++){
+    parent[i]=i;
+    enemy[i]=-1;
+  }
+}
+
+int main(void){
+  int n,m;
+  cin >> n >> m;
+  Init(n);
+  vector<pair<int,int>>v;
+  for(int i=0; i<m; i++){
+    int a, b;
+    cin >> a>> b;
+    merge(a,b);
+    merge(b,a);
+    v.push_back({a,b});
+  }
+  int ans=1;
+  for(int i=0; i<v.size(); i++){
+    if(find(enemy[v[i].first])==find(enemy[v[i].second])){
+      ans=0;
+      break;
+    }
+  }
+  cout << ans << "\n";
+  return 0;
+  
+}
